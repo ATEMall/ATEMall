@@ -17,6 +17,8 @@
 
 **[English]** ATEMall (Automatic Test Equipment Mall) is a professional project collaboration and trading platform dedicated to the field of automated testing and test equipment. We connect project owners with qualified service providers, offering secure, efficient, and transparent cooperation services — delivering high-quality, cost-effective automated testing solutions to every client who needs them.
 
+平台用户、方案提供商涉及：硬件在环系统，自动化功能测试台架，终检测试台架，老化测试台，ICT测试台，自动化软件测试，涉及汽车、汽车零部件、航空航天、芯片等各工业领域自动化测试方案。
+Platform user, solution providers include: hardware-in-the-loop systems, automated functional test benches, final inspection test benches, aging test benches, ICT test benches, and automated software testing, covering automated testing solutions for various industrial sectors such as automobiles, auto parts, aerospace, chips and so on.
 ---
 
 ## ✨ 平台优势 | Advantages
