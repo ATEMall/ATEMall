@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAN Signal Analyzer - Professional Edition v2.4</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', 'Arial', sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(to right, #4a6fa5, #2c3e50);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-content {
+            flex: 1;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header p {
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .version-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .main-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .config-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 1024px) {
+            .config-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .panel h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a6fa5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .input-section label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        .input-area {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+        .input-area:focus {
+            outline: none;
+            border-color: #4a6fa5;
+        }
+        .can-log-importer {
+            background: #fff;
+            border: 2px dashed #17a2b8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .can-log-importer h3 {
+            margin: 0 0 15px 0;
+            color: #17a2b8;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .import-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .import-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .step-number {
+            background: #17a2b8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .search-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .search-item label {
+            font-size: 13px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .search-item input {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+        .search-item input:focus {
+            outline: none;
+            border-color: #17a2b8;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #4a6fa5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3a5a85;
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #138496;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-clear:hover {
+            background: #c82333;
+        }
+        .data-preview {
+            margin-top: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .preview-table th, .preview-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .preview-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+        }
+        .preview-table tr:hover {
+            background: #f8f9fa;
+        }
+        .stats-info {
+            background: #e7f3ff;
+            border-left: 4px solid #17a2b8;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #004085;
+        }
+        .frame-limit-importer {
+            background: #fff;
+            border: 2px dashed #4a6fa5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        .frame-limit-importer h3 {
+            margin: 0 0 15px 0;
+            color: #4a6fa5;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .column-mapping {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .mapping-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .mapping-item label {
+            font-size: 13px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .mapping-item select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .mapping-item select:focus {
+            outline: none;
+            border-color: #4a6fa5;
+        }
+        .mapping-item select.has-value {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .generated-defs {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        .generated-defs h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .generated-defs textarea {
+            width: 100%;
+            height: 200px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .result-tabs {
+            display: flex;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover {
+            color: #4a6fa5;
+        }
+        .tab-btn.active {
+            color: #4a6fa5;
+            border-bottom-color: #4a6fa5;
+            background-color: #f8f9fa;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .result-header h2 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        .signal-count, .byte-count {
+            background: #4a6fa5;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .signal-grid, .byte-grid {
+            display: grid;
+            gap: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .signal-grid {
+            grid-template-columns: 1fr;
+        }
+        .signal-group {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .signal-group-header {
+            background: #e9ecef;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .signal-group-header:hover {
+            background: #dee2e6;
+        }
+        .signal-group-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .signal-group.expanded .signal-group-content {
+            max-height: 2000px;
+            padding: 15px;
+        }
+        .signal-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .signal-table th {
+            background: #f8f9fa;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .signal-table td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .signal-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .signal-valid {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .signal-invalid {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .signal-unknown {
+            color: #6c757d;
+            font-weight: 600;
+        }
+        .byte-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+        .byte-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .byte-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #4a6fa5;
+        }
+        .byte-index {
+            display: block;
+            font-size: 11px;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .byte-value {
+            display: block;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            letter-spacing: 1px;
+        }
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a6fa5;
+        }
+        .stat-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .copy-notice {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+            font-size: 13px;
+        }
+        .error-notice {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+            font-size: 13px;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #6c757d;
+            font-size: 12px;
+            border-top: 1px solid #dee2e6;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🔧 CAN Signal Analyzer - Professional Edition <span class="version-badge">v2.4</span></h1>
+                <p>支持原始日志导入 | Frame Limit 导入 | 解析 CAN 消息 | 信号验证 | 复制与保存</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Configuration Panel -->
+            <div class="config-panel">
+                <div class="panel">
+                    <h2>📋 信号定义配置</h2>
+                    <div class="input-section">
+                        <label>信号定义 (CSV 格式：信号名，起始位置，长度，分组，最小值，最大值)：</label>
+                        <textarea id="signalDefs" class="input-area" placeholder="示例：
+COM_STATUS,0,1,COM STATUS,0,255
+RST_CNT_UNKNOWN,8,1,RESET STATUS,0,255
+MU_IGK_STATE,28,1,Ignition Feedback,0,1"></textarea>
+                        <div class="btn-group">
+                            <button class="btn btn-import" onclick="loadDefaultSignalDefs()">
+                                📋 加载默认定义
+                            </button>
+                            <button class="btn btn-success" onclick="copySignalDefs()">
+                                📋 复制定义
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearSignalDefs()">
+                                🗑️ 清空定义
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CAN Log Importer -->
+                    <div class="can-log-importer">
+                        <h3>📂 从原始 CAN 日志文件导入数据</h3>
+                        <div class="import-steps">
+                            <div class="import-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <label class="step-label">选择 CAN 日志文件 (.txt, .log)：</label>
+                                    <input type="file" id="canLogFileInput" accept=".txt,.log" style="width: 100%; padding: 12px; border: 2px dashed #17a2b8; border-radius: 8px; background: #f8f9fa; cursor: pointer;" onchange="handleCanLogFileSelect(event)">
+                                    <div id="canLogFileInfo" style="margin-top: 10px; color: #6c757d; font-size: 13px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="import-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <label class="step-label">搜索过滤条件（可选）：</label>
+                                    <div class="search-filters">
+                                        <div class="search-item">
+                                            <label>CAN 通道（如 CAN=1）：</label>
+                                            <input type="text" id="searchCanChannel" placeholder="例如: CAN=1">
+                                        </div>
+                                        <div class="search-item">
+                                            <label>时间范围起始：</label>
+                                            <input type="text" id="searchTimeStart" placeholder="例如: 08:19:24">
+                                        </div>
+                                        <div class="search-item">
+                                            <label>时间范围结束：</label>
+                                            <input type="text" id="searchTimeEnd" placeholder="例如: 08:20:00">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="import-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <div class="btn-group">
+                                        <button class="btn btn-info" onclick="previewCanLogData()" id="btnPreviewCanLog" disabled>
+                                            🔍 预览数据
+                                        </button>
+                                        <button class="btn btn-success" onclick="processCanLogData()" id="btnProcessCanLog" disabled>
+                                            ✅ 处理并合并
+                                        </button>
+                                        <button class="btn btn-clear" onclick="resetCanLogImporter()">
+                                            🗑️ 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CAN Log Preview -->
+                            <div class="data-preview" id="canLogPreview" style="display: none;">
+                                <table class="preview-table" id="canLogPreviewTable">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                            <!-- Processing Stats -->
+                            <div class="stats-info" id="canLogStats" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Frame Limit Importer -->
+                    <div class="frame-limit-importer">
+                        <h3>📊 从 Excel 文件导入 Frame Limit</h3>
+                        <div class="import-steps">
+                            <div class="import-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <label class="step-label">选择 Excel 文件 (.xlsx)：</label>
+                                    <input type="file" id="excelFileInput" accept=".xlsx" style="width: 100%; padding: 12px; border: 2px dashed #4a6fa5; border-radius: 8px; background: #f8f9fa; cursor: pointer;" onchange="handleFileSelect(event)">
+                                    <div id="fileInfo" style="margin-top: 10px; color: #6c757d; font-size: 13px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="import-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <label class="step-label">选择工作表：</label>
+                                    <select id="sheetSelect" onchange="loadSheetData()" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px;" disabled>
+                                        <option value="">-- 请先选择 Excel 文件 --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="import-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <label class="step-label">列映射（选择每列对应的字段）：</label>
+                                    <div class="column-mapping" id="columnMapping">
+                                        <div class="mapping-item">
+                                            <label>信号名称 *</label>
+                                            <select id="colName" onchange="updateMappingStatus()"><option value="">-- 先加载数据 --</option></select>
+                                        </div>
+                                        <div class="mapping-item">
+                                            <label>起始位置 (Offset) *</label>
+                                            <select id="colOffset" onchange="updateMappingStatus()"><option value="">-- 先加载数据 --</option></select>
+                                        </div>
+                                        <div class="mapping-item">
+                                            <label>长度 (Length) *</label>
+                                            <select id="colLength" onchange="updateMappingStatus()"><option value="">-- 先加载数据 --</option></select>
+                                        </div>
+                                        <div class="mapping-item">
+                                            <label>分组 (Group)</label>
+                                            <select id="colGroup" onchange="updateMappingStatus()"><option value="">-- 先加载数据 --</option></select>
+                                        </div>
+                                        <div class="mapping-item">
+                                            <label>限值列 (Limit Column)</label>
+                                            <select id="colLimit" onchange="updateMappingStatus()"><option value="">-- 先加载数据 --</option></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="import-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <div class="btn-group">
+                                        <button class="btn btn-info" onclick="previewData()" id="btnPreview" disabled>
+                                            🔍 预览数据
+                                        </button>
+                                        <button class="btn btn-success" onclick="generateSignalDefinitions()" id="btnGenerate" disabled>
+                                            ✅ 生成信号定义
+                                        </button>
+                                        <button class="btn btn-clear" onclick="resetImporter()">
+                                            🗑️ 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Preview -->
+                            <div class="data-preview" id="dataPreview" style="display: none;">
+                                <table class="preview-table" id="previewTable">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                            <!-- Generated Definitions -->
+                            <div class="generated-defs" id="generatedDefs" style="display: none;">
+                                <h4>✨ 生成的信号定义 (可复制到上方配置框)：</h4>
+                                <textarea id="generatedDefsText" readonly></textarea>
+                                <div class="btn-group" style="margin-top: 10px;">
+                                    <button class="btn btn-primary" onclick="applyGeneratedDefs()">
+                                        📥 应用到配置
+                                    </button>
+                                    <button class="btn btn-success" onclick="copyGeneratedDefs()">
+                                        📋 复制定义
+                                    </button>
+                                    <button class="btn btn-info" onclick="saveGeneratedDefs()">
+                                        💾 保存为 CSV
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2>📡 CAN 数据输入</h2>
+                    <div class="input-section">
+                        <label for="canData">输入 CAN 消息 (以 0X 开头的十六进制数据)：</label>
+                        <textarea id="canData" class="input-area" placeholder="粘贴合并后的 CAN 数据或导入日志生成的数据"></textarea>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" onclick="loadSampleData()">
+                                📄 加载示例
+                            </button>
+                            <button class="btn btn-clear" onclick="clearData()">
+                                🗑️ 清空数据
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="parseSignals()">
+                        🔍 解析信号
+                    </button>
+                    <button class="btn btn-success" onclick="validateSignals()">
+                        ✅ 验证极限值
+                    </button>
+                    <button class="btn btn-warning" onclick="toggleView('bytes')">
+                        🔢 查看字节
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="exportResults()">
+                        📤 导出结果
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyResults()">
+                        📋 复制结果
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Notification Area -->
+            <div class="copy-notice" id="copyNotice">操作成功！</div>
+            <div class="error-notice" id="errorNotice"></div>
+            
+            <!-- Result Tabs -->
+            <div class="result-tabs">
+                <button class="tab-btn active" onclick="toggleView('signals')">信号视图</button>
+                <button class="tab-btn" onclick="toggleView('bytes')">字节视图</button>
+                <button class="tab-btn" onclick="toggleView('stats')">统计信息</button>
+            </div>
+            
+            <!-- Signal View -->
+            <div id="signalView" class="tab-content active">
+                <div class="result-section">
+                    <div class="result-header">
+                        <h2>信号解析结果</h2>
+                        <div class="signal-count" id="signalCount">0 signals</div>
+                    </div>
+                    
+                    <div class="signal-grid" id="signalGrid">
+                        <!-- Signal groups will be dynamically generated here -->
+                    </div>
+                    
+                    <div class="stats-panel">
+                        <div class="stat-card">
+                            <h3>总信号数</h3>
+                            <div class="stat-value" id="totalSignals">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>有效信号</h3>
+                            <div class="stat-value" id="validSignals">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>无效信号</h3>
+                            <div class="stat-value" id="invalidSignals">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>验证通过率</h3>
+                            <div class="stat-value" id="validationRate">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Byte View -->
+            <div id="byteView" class="tab-content">
+                <div class="result-section">
+                    <div class="result-header">
+                        <h2>字节拆分结果</h2>
+                        <div class="byte-count" id="byteCount">0 bytes</div>
+                    </div>
+                    
+                    <div class="byte-grid" id="byteGrid">
+                        <!-- Bytes will be dynamically generated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics View -->
+            <div id="statsView" class="tab-content">
+                <div class="result-section">
+                    <div style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 8px; padding: 15px; border: 1px solid #e0e0e0;">
+                        <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">CAN 消息信息</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #dee2e6;">
+                                <span style="color: #6c757d;">原始数据长度:</span>
+                                <span style="font-weight: 600; font-family: 'Consolas', 'Monaco', monospace;" id="originalLength">0 characters</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #dee2e6;">
+                                <span style="color: #6c757d;">总字节数:</span>
+                                <span style="font-weight: 600; font-family: 'Consolas', 'Monaco', monospace;" id="totalBytes">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #dee2e6;">
+                                <span style="color: #6c757d;">信号定义数:</span>
+                                <span style="font-weight: 600; font-family: 'Consolas', 'Monaco', monospace;" id="defCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h3>信号分组统计</h3>
+                        <div id="groupStats">
+                            <!-- Group statistics will be dynamically generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>CAN Signal Analyzer v2.4 | 支持原始日志导入 | Frame Limit 导入 | 信号定义导入/复制/保存 | 字节组合 | FRAME Limit 验证</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // Global variables
+        let signalDefinitions = [];
+        let parsedSignals = [];
+        let canBytes = [];
+        let currentView = 'signals';
+        let parsedColumns = [];
+        let parsedRows = [];
+        let workbook = null;
+        let currentSheetData = null;
+        let rawCanLogLines = [];
+        
+        // Default signal definitions
+        const defaultSignalDefs = `COM_STATUS,0,1,COM STATUS,0,255
+RST_CNT_UNKNOWN,8,1,RESET STATUS,0,255
+RST_CNT_PORST,9,1,RESET STATUS,0,255
+RST_CNT_VDDRST,10,1,RESET STATUS,0,255
+RST_CNT_EXT_RST,11,1,RESET STATUS,0,255
+RST_CNT_WDRST,12,1,RESET STATUS,0,255
+RST_CNT_SWRST,13,1,RESET STATUS,0,255
+ERROR_CAUSE,14,4,RESET STATUS,0,4294967295
+RST_ADDRESS,18,4,RESET STATUS,0,4294967295
+MU_IGK_STATE,28,1,Ignition Feedback,0,1
+MU_AI_MIN,29,1,Ignition Feedback,0,255
+MU_AI_MAX,30,1,Ignition Feedback,0,255
+DIAG_0,45,2,ATIC239 Diagnostics,0,65535
+DIAG_A239_02_PWR_P10_3,47,2,ATIC239 Diagnostics,0,65535`;
+
+        // === CAN Log Import Functions ===
+        
+        function handleCanLogFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileInfo = document.getElementById('canLogFileInfo');
+            fileInfo.textContent = `已选择：${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    rawCanLogLines = e.target.result.split('\n').filter(line => line.trim() !== '');
+                    document.getElementById('btnPreviewCanLog').disabled = false;
+                    document.getElementById('btnProcessCanLog').disabled = false;
+                    showNotification(`成功加载 CAN 日志文件，共 ${rawCanLogLines.length} 行`);
+                } catch (error) {
+                    showError('读取文件失败：' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function previewCanLogData() {
+            if (rawCanLogLines.length === 0) {
+                showError('没有可预览的数据');
+                return;
+            }
+
+            const canChannel = document.getElementById('searchCanChannel').value.trim();
+            const timeStart = document.getElementById('searchTimeStart').value.trim();
+            const timeEnd = document.getElementById('searchTimeEnd').value.trim();
+
+            let filteredLines = rawCanLogLines.slice();
+
+            // Filter by CAN channel - more flexible matching
+            if (canChannel) {
+                // Split by common delimiters to support flexible input
+                const searchTerms = canChannel.replace(/[,\s_]/g, ' ').split(/\s+/).filter(t => t);
+                filteredLines = filteredLines.filter(line => {
+                    const lineLower = line.toLowerCase();
+                    return searchTerms.some(term => lineLower.includes(term.toLowerCase()));
+                });
+            }
+
+            // Filter by time range
+            if (timeStart || timeEnd) {
+                filteredLines = filteredLines.filter(line => {
+                    const match = line.match(/(\d{2}:\d{2}:\d{2})/);
+                    if (!match) return false;
+                    const time = match[1];
+                    if (timeStart && time < timeStart) return false;
+                    if (timeEnd && time > timeEnd) return false;
+                    return true;
+                });
+            }
+
+            // Show preview (first 10 rows)
+            const previewDiv = document.getElementById('canLogPreview');
+            const table = document.getElementById('canLogPreviewTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            thead.innerHTML = '<tr><th>行号</th><th>原始数据行</th></tr>';
+            let bodyHTML = '';
+            const previewRows = filteredLines.slice(0, 10);
+            previewRows.forEach((line, idx) => {
+                bodyHTML += `<tr><td>${idx + 1}</td><td style="font-family: monospace; font-size: 11px; word-break: break-all;">${line.substring(0, 150)}${line.length > 150 ? '...' : ''}</td></tr>`;
+            });
+            if (filteredLines.length > 10) {
+                bodyHTML += `<tr><td colspan="2" style="text-align:center;color:#6c757d;">... 还有 ${filteredLines.length - 10} 行 ...</td></tr>`;
+            }
+            tbody.innerHTML = bodyHTML;
+            previewDiv.style.display = 'block';
+
+            const stats = document.getElementById('canLogStats');
+            stats.innerHTML = `预览结果：共 <strong>${filteredLines.length}</strong> 行数据匹配条件 (原始 ${rawCanLogLines.length} 行)`;
+            stats.style.display = 'block';
+        }
+
+        function processCanLogData() {
+            if (rawCanLogLines.length === 0) {
+                showError('没有可处理的数据，请先选择文件');
+                return;
+            }
+
+            const canChannel = document.getElementById('searchCanChannel').value.trim();
+            const timeStart = document.getElementById('searchTimeStart').value.trim();
+            const timeEnd = document.getElementById('searchTimeEnd').value.trim();
+
+            let filteredLines = rawCanLogLines.slice();
+
+            // Debug: Show initial count
+            console.log(`初始行数: ${rawCanLogLines.length}`);
+
+            // Filter by CAN channel - more flexible matching
+            if (canChannel) {
+                const searchTerms = canChannel.replace(/[,\s_]/g, ' ').split(/\s+/).filter(t => t);
+                console.log(`搜索条件分解: ${JSON.stringify(searchTerms)}`);
+                filteredLines = filteredLines.filter(line => {
+                    const lineLower = line.toLowerCase();
+                    return searchTerms.some(term => lineLower.includes(term.toLowerCase()));
+                });
+                console.log(`CAN 通道过滤后: ${filteredLines.length} 行`);
+            }
+            
+            // Filter by time range
+            if (timeStart || timeEnd) {
+                const beforeTimeFilter = filteredLines.length;
+                filteredLines = filteredLines.filter(line => {
+                    const match = line.match(/(\d{2}:\d{2}:\d{2})/);
+                    if (!match) return false;
+                    const time = match[1];
+                    if (timeStart && time < timeStart) return false;
+                    if (timeEnd && time > timeEnd) return false;
+                    return true;
+                });
+                console.log(`时间范围过滤：${beforeTimeFilter} -> ${filteredLines.length} 行`);
+            }
+
+            // If no lines passed filtering, show diagnostic info
+            if (filteredLines.length === 0) {
+                const stats = document.getElementById('canLogStats');
+                stats.innerHTML = `<span style="color: #dc3545;">⚠️ 无数据：没有行匹配过滤条件。</span><br>
+                    原始行数: ${rawCanLogLines.length} | 
+                    CAN 通道条件: "${canChannel}" | 
+                    时间范围: ${timeStart || '无'} ~ ${timeEnd || '无'}<br>
+                    <span style="font-size:12px; color:#6c757d;">建议：尝试放宽或移除搜索条件，或检查日志文件内容</span>`;
+                stats.style.display = 'block';
+                showError('没有行匹配过滤条件，请调整搜索参数后重试');
+                return;
+            }
+
+            // Parse CAN frames from ISO protocol format
+            const frames = [];
+            filteredLines.forEach((line, lineIdx) => {
+                // Extract timestamp
+                const timeMatch = line.match(/(\d{2}:\d{2}:\d{2})/);
+                const timestamp = timeMatch ? timeMatch[1] : '';
+
+                // Extract CAN channel - support multiple formats
+                let channel = 'Unknown';
+                const channelMatch = line.match(/CAN[=_](\d+)/i) || 
+                                   line.match(/\bCAN(\d+)\b/i) ||
+                                   line.match(/\[CAN,(\d+)\]/);
+                if (channelMatch) {
+                    channel = `CAN${channelMatch[1]}`;
+                }
+
+                // Extract data length from various formats
+                let dataLength = null;
+                const lengthMatch = line.match(/\[00\/\d+,(\d+)\]/) || 
+                                  line.match(/length[,\s=]+(\d+)/i) ||
+                                  line.match(/,(\d+)\]/);
+                if (lengthMatch) {
+                    dataLength = parseInt(lengthMatch[1]);
+                }
+
+                // Extract hex data - improved regex to handle more formats
+                let hexData = '';
+                
+                // Try multiple patterns
+                // Pattern 1: STD,0x followed by hex
+                let match = line.match(/STD,0x([0-9A-Fa-f]+)/i);
+                if (match) {
+                    hexData = match[1].toUpperCase();
+                }
+                
+                // Pattern 2: 0X followed by hex (anywhere in line)
+                if (!hexData) {
+                    match = line.match(/0x([0-9A-Fa-f]+)/i);
+                    if (match) {
+                        hexData = match[1].toUpperCase();
+                    }
+                }
+                
+                // Pattern 3: Multiple 0x segments - extract the longest one
+                if (!hexData) {
+                    const allHexMatches = line.match(/0x[0-9A-Fa-f]+/gi);
+                    if (allHexMatches && allHexMatches.length > 0) {
+                        hexData = allHexMatches[allHexMatches.length - 1].substring(2).toUpperCase();
+                    }
+                }
+
+                // Add frame if valid hex data found
+                if (hexData.length >= 2) {
+                    // Truncate to expected length if specified
+                    if (dataLength && hexData.length > dataLength * 2) {
+                        hexData = hexData.substring(0, dataLength * 2);
+                    }
+                    
+                    frames.push({
+                        lineNo: lineIdx + 1,
+                        timestamp: timestamp,
+                        channel: channel,
+                        length: dataLength,
+                        data: hexData
+                    });
+                }
+            });
+
+            // Merge frames into single CAN data string
+            let mergedData = '0X';
+            let totalBytes = 0;
+            frames.forEach(frame => {
+                mergedData += frame.data;
+                totalBytes += frame.data.length / 2;
+            });
+
+            // Set to CAN data textarea
+            document.getElementById('canData').value = mergedData;
+
+            const stats = document.getElementById('canLogStats');
+            if (frames.length > 0) {
+                stats.innerHTML = `✅ 处理完成：从 <strong>${filteredLines.length}</strong> 行日志中提取 <strong>${frames.length}</strong> 个有效 CAN 帧，合并数据长度：<strong>${mergedData.length - 2}</strong> 个十六进制字符 (<strong>${totalBytes}</strong> 字节)`;
+                stats.style.display = 'block';
+                showNotification(`成功处理 ${frames.length} 个 CAN 帧 (共 ${filteredLines.length} 行)，数据已合并`);
+            } else {
+                stats.innerHTML = `<span style="color: #dc3545;">⚠️ 无数据：过滤后的 ${filteredLines.length} 行中没有发现有效的 CAN 数据</span><br>
+                    可能原因：日志格式不匹配或没有 0x 十六进制数据`;
+                stats.style.display = 'block';
+                showError(`未提取到任何有效的 CAN 帧数据（共检查 ${filteredLines.length} 行）`);
+            }
+        }
+
+        function resetCanLogImporter() {
+            document.getElementById('canLogFileInput').value = '';
+            document.getElementById('canLogFileInfo').textContent = '';
+            document.getElementById('searchCanChannel').value = '';
+            document.getElementById('searchTimeStart').value = '';
+            document.getElementById('searchTimeEnd').value = '';
+            document.getElementById('canLogPreview').style.display = 'none';
+            document.getElementById('canLogStats').style.display = 'none';
+            rawCanLogLines = [];
+            document.getElementById('btnPreviewCanLog').disabled = true;
+            document.getElementById('btnProcessCanLog').disabled = true;
+            showNotification('已重置 CAN 日志导入器');
+        }
+
+        // === Frame Limit & Signal Functions (from v2.3) ===
+
+        function loadDefaultSignalDefs() {
+            document.getElementById('signalDefs').value = defaultSignalDefs;
+            showNotification('默认信号定义已加载');
+        }
+
+        function clearSignalDefs() {
+            document.getElementById('signalDefs').value = '';
+            signalDefinitions = [];
+            showNotification('信号定义已清空');
+        }
+
+        function copySignalDefs() {
+            const signalText = document.getElementById('signalDefs').value;
+            if (!signalText) {
+                showError('没有可复制的信号定义');
+                return;
+            }
+            navigator.clipboard.writeText(signalText).then(() => {
+                showNotification('信号定义已复制到剪贴板');
+            }).catch(() => {
+                showError('复制失败，请手动选择复制');
+            });
+        }
+
+        function resetColumnMapping() {
+            const selects = ['colName', 'colOffset', 'colLength', 'colGroup', 'colLimit'];
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '<option value="">-- 选择列 --</option>';
+                select.classList.remove('has-value');
+            });
+            document.getElementById('btnGenerate').disabled = true;
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileInfo = document.getElementById('fileInfo');
+            fileInfo.textContent = `已选择：${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    workbook = XLSX.read(data, { type: 'array' });
+
+                    const sheetSelect = document.getElementById('sheetSelect');
+                    sheetSelect.innerHTML = '<option value="">-- 选择工作表 --</option>';
+                    
+                    workbook.SheetNames.forEach(sheetName => {
+                        const option = document.createElement('option');
+                        option.value = sheetName;
+                        option.textContent = sheetName;
+                        sheetSelect.appendChild(option);
+                    });
+
+                    sheetSelect.disabled = false;
+                    showNotification(`成功加载 Excel 文件，包含 ${workbook.SheetNames.length} 个工作表`);
+                } catch (error) {
+                    showError('读取 Excel 文件失败：' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function loadSheetData() {
+            const sheetName = document.getElementById('sheetSelect').value;
+            if (!sheetName || !workbook) return;
+
+            try {
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                if (jsonData.length < 2) {
+                    showError('工作表数据为空或格式不正确');
+                    return;
+                }
+
+                parsedColumns = jsonData[0].map(col => col ? String(col).trim() : '');
+                parsedRows = jsonData.slice(1).filter(row => row && row.length > 0);
+
+                populateColumnMapping();
+                document.getElementById('btnPreview').disabled = false;
+                
+                showNotification(`成功加载工作表 "${sheetName}"：${parsedRows.length} 行数据，${parsedColumns.length} 列`);
+            } catch (error) {
+                showError('加载工作表失败：' + error.message);
+            }
+        }
+
+        function previewData() {
+            if (parsedRows.length === 0) {
+                showError('没有可预览的数据');
+                return;
+            }
+            showPreview();
+        }
+
+        function populateColumnMapping() {
+            const selects = ['colName', 'colOffset', 'colLength', 'colGroup', 'colLimit'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">-- 选择列 --</option>';
+                
+                parsedColumns.forEach((colName, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = colName || `列 ${index + 1}`;
+                    select.appendChild(option);
+                });
+            });
+
+            autoDetectColumns();
+        }
+
+        function autoDetectColumns() {
+            const nameKeywords = ['name', 'signal', 'sig', '信号', '帧名'];
+            const offsetKeywords = ['offset', 'start', 'position', 'pos', '起始', '位置'];
+            const lengthKeywords = ['length', 'len', 'size', 'long', '长度'];
+            const groupKeywords = ['group', 'frame', 'category', '分组', '帧'];
+            const minKeywords = ['min', 'minimum', 'low', '最小', '下限'];
+            const maxKeywords = ['max', 'maximum', 'high', '最大', '上限', 'limit'];
+
+            function findColumn(keywords) {
+                for (let i = 0; i < parsedColumns.length; i++) {
+                    const colName = parsedColumns[i].toLowerCase();
+                    if (keywords.some(kw => colName.includes(kw))) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
+            const mappings = {
+                'colName': findColumn(nameKeywords),
+                'colOffset': findColumn(offsetKeywords),
+                'colLength': findColumn(lengthKeywords),
+                'colGroup': findColumn(groupKeywords),
+                'colLimit': findColumn([...minKeywords, ...maxKeywords, 'limit'])
+            };
+
+            for (const [selectId, colIndex] of Object.entries(mappings)) {
+                if (colIndex >= 0) {
+                    document.getElementById(selectId).value = colIndex;
+                }
+            }
+
+            updateMappingStatus();
+        }
+
+        function updateMappingStatus() {
+            const selects = ['colName', 'colOffset', 'colLength', 'colGroup', 'colLimit'];
+            const requiredSelects = ['colName', 'colOffset', 'colLength', 'colLimit'];
+            
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select.value !== '') {
+                    select.classList.add('has-value');
+                } else {
+                    select.classList.remove('has-value');
+                }
+            });
+
+            const allRequired = requiredSelects.every(id => document.getElementById(id).value !== '');
+            document.getElementById('btnGenerate').disabled = !allRequired;
+
+            const limitSelect = document.getElementById('colLimit');
+            if (limitSelect.value !== '') {
+                const limitHeader = parsedColumns[parseInt(limitSelect.value)] || '';
+                if (/\bval\b|value/i.test(limitHeader)) {
+                    showError('警告：当前限值列看起来是 val 列，建议选择 Min/Max 列作为限值来源');
+                }
+            }
+        }
+
+        function showPreview() {
+            const previewDiv = document.getElementById('dataPreview');
+            const table = document.getElementById('previewTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            let headerHTML = '<tr>';
+            parsedColumns.forEach((col, i) => {
+                headerHTML += `<th>${col || '列' + (i+1)}</th>`;
+            });
+            headerHTML += '</tr>';
+            thead.innerHTML = headerHTML;
+
+            let bodyHTML = '';
+            const previewRows = parsedRows.slice(0, 10);
+            previewRows.forEach(row => {
+                bodyHTML += '<tr>';
+                parsedColumns.forEach((_, i) => {
+                    const cell = row[i] !== undefined ? row[i] : '-';
+                    bodyHTML += `<td>${cell}</td>`;
+                });
+                bodyHTML += '</tr>';
+            });
+            if (parsedRows.length > 10) {
+                bodyHTML += `<tr><td colspan="${parsedColumns.length}" style="text-align:center;color:#6c757d;">... 还有 ${parsedRows.length - 10} 行 ...</td></tr>`;
+            }
+            tbody.innerHTML = bodyHTML;
+
+            previewDiv.style.display = 'block';
+        }
+
+        function resetImporter() {
+            document.getElementById('excelFileInput').value = '';
+            document.getElementById('fileInfo').textContent = '';
+            document.getElementById('sheetSelect').innerHTML = '<option value="">-- 请先选择 Excel 文件 --</option>';
+            document.getElementById('sheetSelect').disabled = true;
+            document.getElementById('dataPreview').style.display = 'none';
+            document.getElementById('generatedDefs').style.display = 'none';
+            workbook = null;
+            currentSheetData = null;
+            parsedColumns = [];
+            parsedRows = [];
+            resetColumnMapping();
+            document.getElementById('btnPreview').disabled = true;
+            showNotification('已重置导入器');
+        }
+
+        function generateSignalDefinitions() {
+            const nameIdx = parseInt(document.getElementById('colName').value);
+            const offsetIdx = parseInt(document.getElementById('colOffset').value);
+            const lengthIdx = parseInt(document.getElementById('colLength').value);
+            const groupIdx = parseInt(document.getElementById('colGroup').value);
+            const limitIdx = parseInt(document.getElementById('colLimit').value);
+
+            const definitions = [];
+            let successCount = 0;
+            let skipCount = 0;
+
+            parsedRows.forEach((row, rowIndex) => {
+                try {
+                    const rawName = row[nameIdx];
+                    const rawOffset = row[offsetIdx];
+                    const rawLength = row[lengthIdx];
+
+                    const name = (rawName !== undefined && rawName !== null) ? String(rawName).trim() : '';
+                    const offsetStr = (rawOffset !== undefined && rawOffset !== null) ? String(rawOffset).trim() : '';
+                    const lengthStr = (rawLength !== undefined && rawLength !== null) ? String(rawLength).trim() : '';
+
+                    if (!name || !offsetStr || !lengthStr) {
+                        skipCount++;
+                        return;
+                    }
+
+                    if (name.toLowerCase().includes('signal') || name === '-') {
+                        skipCount++;
+                        return;
+                    }
+
+                    const offset = parseInt(offsetStr);
+                    const length = parseInt(lengthStr);
+                    
+                    if (isNaN(offset) || isNaN(length)) {
+                        skipCount++;
+                        return;
+                    }
+
+                    const group = groupIdx >= 0 && row[groupIdx] !== undefined && row[groupIdx] !== null ? String(row[groupIdx]).trim() : 'Unknown';
+
+                    let min = null;
+                    let max = null;
+                    if (!isNaN(limitIdx) && limitIdx >= 0 && row[limitIdx] !== undefined && row[limitIdx] !== null) {
+                        const rawLimit = String(row[limitIdx]).trim();
+
+                        const rangeMatch = rawLimit.match(/(-?\d+(?:\.\d*)?)\s*[-~–]+\s*(-?\d+(?:\.\d*)?)/);
+                        if (rangeMatch) {
+                            min = parseFloat(rangeMatch[1]);
+                            max = parseFloat(rangeMatch[2]);
+                        } else {
+                            const tokens = rawLimit.replace(/,/g, ' ').split(/\s+/).filter(t => t !== '');
+                            const numericValues = tokens.map(t => parseFloat(t)).filter(n => !isNaN(n));
+
+                            let candidateValues = numericValues;
+                            if (candidateValues.length > 2) {
+                                candidateValues = candidateValues.slice(2);
+                            }
+
+                            if (candidateValues.length > 0) {
+                                min = Math.min(...candidateValues);
+                                max = Math.max(...candidateValues);
+                            } else if (numericValues.length === 1) {
+                                min = max = numericValues[0];
+                            }
+                        }
+                    }
+
+                    const minStr = min !== null ? min.toString() : '';
+                    const maxStr = max !== null ? max.toString() : '';
+
+                    definitions.push(`${name},${offset},${length},${group},${minStr},${maxStr}`);
+                    successCount++;
+                } catch (error) {
+                    skipCount++;
+                }
+            });
+
+            if (definitions.length === 0) {
+                showError('未能生成任何有效的信号定义，请检查列映射和数据格式');
+                return;
+            }
+
+            const csvContent = definitions.join('\n');
+            document.getElementById('generatedDefsText').value = csvContent;
+            document.getElementById('generatedDefs').style.display = 'block';
+
+            showNotification(`成功生成 ${successCount} 个信号定义，跳过 ${skipCount} 行`);
+            document.getElementById('generatedDefs').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function applyGeneratedDefs() {
+            const generatedText = document.getElementById('generatedDefsText').value;
+            document.getElementById('signalDefs').value = generatedText;
+            showNotification('已应用到信号定义配置');
+            document.getElementById('signalDefs').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyGeneratedDefs() {
+            const generatedText = document.getElementById('generatedDefsText').value;
+            navigator.clipboard.writeText(generatedText).then(() => {
+                showNotification('定义已复制到剪贴板');
+            }).catch(() => {
+                showError('复制失败，请手动选择复制');
+            });
+        }
+
+        function saveGeneratedDefs() {
+            const generatedText = document.getElementById('generatedDefsText').value;
+            if (!generatedText) {
+                showError('没有可保存的信号定义');
+                return;
+            }
+
+            const csvContent = "Signal Name,Start Position,Length,Group,Min Value,Max Value\n" + generatedText;
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `signal_definitions_${new Date().getTime()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('信号定义已保存为 CSV 文件');
+        }
+
+        function loadSampleData() {
+            const sampleData = "0XA085020011A0961000000000000000000000000000000010A09A11030100010000022200000128640007A0E111080200000023A0E11100000000000000000000000000000000000000000804080400000000000000000023A0E11100000000000000000000000000000000000000000804080400000000000000000009A0C314000200005428000DA0C31501020000065600000658000DA0C315020200000426000004280008A0C30002000097FF0008A0C30002000079800008A0C3000200004AC80008A0C30002000060040008A0C30002000097FF0008A0C30002000079800008A0C3000200004AB50008A0C30002000060040005A0D31000000005A0D31001000005A0D31001000005A0D31001000005A0D31000000005A0D31001000005A0D31001000005A0D31000000005A0D31000000005A0D31001000005A0D31001000005A0D31000000005A0D31000000005A0D31001000005A0D31000000013A0D4110000000000000000000000000000016E0013A0D4110000000000000000000000000000016E0013A0D4110000000000000000000000000000016E0013A0D4110000000000000000000000000000016E0013A0D4110000000000000000000000000000016F0013A0D4110000000000000000000000000000016F0013A0D4110000000000000000000000000000016F0013A0D4110000000000000000000000000000016F0012A0BE130896000002530400000000000000000012A0BE130898000002550400000000000000000173A0D21139E83A000000024D000000100000027511301158000004A5413041480000024341384150000004D73FF8401000000469407040800000017B3FF04010000004053FF040080000027F3FF84010000003B53CC03DE8000002A73CA83DD0000001F341304148000002613FE83FF80000018F000000080000017B0000000800000199000000100000018F40784090000004FF000000080000018541304148000004D740004020000004417FF87FF80000017172F873080000018F7FD07FE8000002F73FF840080000018F3FF840080000018F70187030000004CD3FB83FD0000002073AC83AD8000001AD39703988000002E340004010000001AD3FF84010000003E73FF040100000050940704080000001A300000010000001D57FE07FF800000441000000080000017B00000010000001DF40404050000001AD3FF84008000001A33FF840100000020740384050000001E9000000080000017B000000080000017B00000008000001B7000000080000024D0023A0D2113A083A200000035139D039E0000001AD3A703A8000000301000000080000017B0007A0D520FFF500090007A0D520FFF2000B0005A0E11100000005A0E11100000005A0E11100000005A0E11100000007A0A203DE0900000009A0E1228081000002780009A0E1228081000005480009A0E1227F800000023C0009A0E1228081000001F60005A0E1250138";
+            document.getElementById('canData').value = sampleData;
+            showNotification('示例数据已加载，点击"解析信号"按钮开始解析');
+        }
+
+        function clearData() {
+            document.getElementById('canData').value = '';
+            parsedSignals = [];
+            canBytes = [];
+            document.getElementById('signalView').style.display = 'none';
+            document.getElementById('byteView').style.display = 'none';
+            document.getElementById('statsView').style.display = 'none';
+            document.querySelector('.tab-btn.active').classList.remove('active');
+            document.querySelector('.tab-btn[onclick="toggleView(\'signals\')"]').classList.add('active');
+            document.getElementById('signalView').classList.add('active');
+            document.getElementById('signalGrid').innerHTML = '';
+            document.getElementById('byteGrid').innerHTML = '';
+            showNotification('已清空所有数据');
+        }
+
+        function toggleView(view) {
+            currentView = view;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (view === 'signals') {
+                document.querySelector('.tab-btn[onclick="toggleView(\'signals\')"]').classList.add('active');
+                document.getElementById('signalView').classList.add('active');
+            } else if (view === 'bytes') {
+                document.querySelector('.tab-btn[onclick="toggleView(\'bytes\')"]').classList.add('active');
+                document.getElementById('byteView').classList.add('active');
+                renderByteView();
+            } else if (view === 'stats') {
+                document.querySelector('.tab-btn[onclick="toggleView(\'stats\')"]').classList.add('active');
+                document.getElementById('statsView').classList.add('active');
+                renderStatsView();
+            }
+        }
+
+        function parseSignalDefinitions() {
+            const defText = document.getElementById('signalDefs').value.trim();
+            if (!defText) {
+                signalDefinitions = [];
+                return false;
+            }
+            
+            signalDefinitions = [];
+            const lines = defText.split('\n');
+            
+            for (let line of lines) {
+                line = line.trim();
+                if (!line || line.startsWith('#')) continue;
+                
+                const parts = line.split(',').map(p => p.trim());
+                if (parts.length < 4) continue;
+                
+                const signalDef = {
+                    name: parts[0],
+                    offset: parseInt(parts[1], 10),
+                    length: parseInt(parts[2], 10),
+                    group: parts[3],
+                    min: parts.length > 4 && parts[4] ? parseFloat(parts[4]) : null,
+                    max: parts.length > 5 && parts[5] ? parseFloat(parts[5]) : null
+                };
+                
+                signalDefinitions.push(signalDef);
+            }
+            
+            return signalDefinitions.length > 0;
+        }
+
+        function parseCANBytes(input) {
+            let hexString = input;
+            if (input.toUpperCase().startsWith('0X')) {
+                hexString = input.substring(2);
+            }
+            
+            hexString = hexString.replace(/\s+/g, '');
+            
+            if (!/^[0-9A-Fa-f]+$/.test(hexString)) {
+                throw new Error('数据包含非十六进制字符');
+            }
+            
+            if (hexString.length % 2 !== 0) {
+                hexString = hexString.substring(0, hexString.length - 1);
+            }
+            
+            const bytes = [];
+            for (let i = 0; i < hexString.length; i += 2) {
+                const byte = hexString.substr(i, 2).toUpperCase();
+                bytes.push(parseInt(byte, 16));
+            }
+            
+            return bytes;
+        }
+
+        function extractSignalValue(bytes, offset, length) {
+            if (offset + length > bytes.length) {
+                return null;
+            }
+            
+            let value = 0;
+            for (let i = 0; i < length; i++) {
+                value = (value << 8) | bytes[offset + i];
+            }
+            
+            return value;
+        }
+
+        function validateSignalValue(value, min, max) {
+            if (min === null || max === null) {
+                return 'unknown';
+            }
+            
+            if (value >= min && value <= max) {
+                return 'valid';
+            } else {
+                return 'invalid';
+            }
+        }
+
+        function parseSignals() {
+            const startTime = performance.now();
+            
+            try {
+                if (!parseSignalDefinitions()) {
+                    showError('请先定义信号');
+                    return;
+                }
+                
+                const input = document.getElementById('canData').value.trim();
+                if (!input) {
+                    showError('请输入 CAN 数据');
+                    return;
+                }
+                
+                canBytes = parseCANBytes(input);
+                parsedSignals = [];
+                const groups = {};
+                
+                for (const def of signalDefinitions) {
+                    const value = extractSignalValue(canBytes, def.offset, def.length);
+                    if (value === null) continue;
+                    
+                    const validation = validateSignalValue(value, def.min, def.max);
+                    
+                    const signal = {
+                        name: def.name,
+                        offset: def.offset,
+                        length: def.length,
+                        value: value,
+                        hexValue: '0x' + value.toString(16).toUpperCase().padStart(def.length * 2, '0'),
+                        decimalValue: value,
+                        group: def.group,
+                        min: def.min,
+                        max: def.max,
+                        validation: validation
+                    };
+                    
+                    parsedSignals.push(signal);
+                    
+                    if (!groups[def.group]) {
+                        groups[def.group] = [];
+                    }
+                    groups[def.group].push(signal);
+                }
+                
+                updateStatistics(startTime);
+                renderSignalView(groups);
+                toggleView('signals');
+                
+                showNotification(`成功解析 ${parsedSignals.length} 个信号，耗时 ${(performance.now() - startTime).toFixed(2)}ms`);
+                
+            } catch (error) {
+                showError('解析失败：' + error.message);
+            }
+        }
+
+        function validateSignals() {
+            if (parsedSignals.length === 0) {
+                showError('没有可验证的信号，请先解析');
+                return;
+            }
+            
+            let validCount = 0;
+            let invalidCount = 0;
+            let unknownCount = 0;
+            
+            parsedSignals.forEach(signal => {
+                if (signal.min !== null && signal.max !== null) {
+                    signal.validation = validateSignalValue(signal.value, signal.min, signal.max);
+                } else {
+                    signal.validation = 'unknown';
+                }
+                
+                if (signal.validation === 'valid') validCount++;
+                else if (signal.validation === 'invalid') invalidCount++;
+                else unknownCount++;
+            });
+            
+            const groups = {};
+            parsedSignals.forEach(signal => {
+                if (!groups[signal.group]) {
+                    groups[signal.group] = [];
+                }
+                groups[signal.group].push(signal);
+            });
+            
+            renderSignalView(groups);
+            
+            document.getElementById('validSignals').textContent = validCount;
+            document.getElementById('invalidSignals').textContent = invalidCount;
+            const total = parsedSignals.length;
+            const rate = total > 0 ? Math.round((validCount / total) * 100) : 0;
+            document.getElementById('validationRate').textContent = `${rate}%`;
+            
+            showNotification(`验证完成：${validCount} 个有效，${invalidCount} 个无效，${unknownCount} 个未定义极限值`);
+        }
+
+        function renderSignalView(groups) {
+            const signalGrid = document.getElementById('signalGrid');
+            signalGrid.innerHTML = '';
+            
+            if (Object.keys(groups).length === 0) {
+                signalGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #6c757d;">没有信号数据，请先解析</div>';
+                return;
+            }
+            
+            for (const [groupName, signals] of Object.entries(groups)) {
+                const groupElement = document.createElement('div');
+                groupElement.className = 'signal-group';
+                groupElement.innerHTML = `
+                    <div class="signal-group-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span>${groupName} (${signals.length} 个信号)</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="signal-group-content">
+                        <table class="signal-table">
+                            <thead>
+                                <tr>
+                                    <th>信号名</th>
+                                    <th>位置</th>
+                                    <th>长度</th>
+                                    <th>十六进制值</th>
+                                    <th>十进制值</th>
+                                    <th>极限值</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${signals.map(signal => `
+                                    <tr>
+                                        <td><strong>${signal.name}</strong></td>
+                                        <td>字节 ${signal.offset}</td>
+                                        <td>${signal.length} 字节</td>
+                                        <td><code>${signal.hexValue}</code></td>
+                                        <td><code>${signal.decimalValue}</code></td>
+                                        <td>
+                                            ${signal.min !== null && signal.max !== null 
+                                                ? `${signal.min} ~ ${signal.max}` 
+                                                : `<em>未定义</em>`}
+                                        </td>
+                                        <td>
+                                            <span class="signal-${signal.validation}">
+                                                ${signal.validation === 'valid' ? '✓ 有效' : 
+                                                  signal.validation === 'invalid' ? '✗ 无效' : '? 未验证'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                signalGrid.appendChild(groupElement);
+            }
+            
+            document.getElementById('signalCount').textContent = `${parsedSignals.length} 个信号`;
+        }
+
+        function renderByteView() {
+            const byteGrid = document.getElementById('byteGrid');
+            byteGrid.innerHTML = '';
+            
+            if (canBytes.length === 0) {
+                byteGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #6c757d;">没有字节数据</div>';
+                return;
+            }
+            
+            const usedBytes = new Set();
+            parsedSignals.forEach(signal => {
+                for (let i = 0; i < signal.length; i++) {
+                    usedBytes.add(signal.offset + i);
+                }
+            });
+            
+            canBytes.forEach((byte, index) => {
+                const byteElement = document.createElement('div');
+                byteElement.className = 'byte-item';
+                if (usedBytes.has(index)) {
+                    byteElement.style.backgroundColor = '#fff3cd';
+                    byteElement.style.borderColor = '#ffeaa7';
+                }
+                byteElement.innerHTML = `
+                    <span class="byte-index">字节 ${index}</span>
+                    <span class="byte-value">0x${byte.toString(16).toUpperCase().padStart(2, '0')}</span>
+                `;
+                byteGrid.appendChild(byteElement);
+            });
+            
+            document.getElementById('byteCount').textContent = `${canBytes.length} 字节`;
+        }
+
+        function renderStatsView() {
+            const groupStats = document.getElementById('groupStats');
+            
+            const groups = {};
+            parsedSignals.forEach(signal => {
+                if (!groups[signal.group]) {
+                    groups[signal.group] = { total: 0, valid: 0, invalid: 0, unknown: 0 };
+                }
+                groups[signal.group].total++;
+                if (signal.validation === 'valid') groups[signal.group].valid++;
+                else if (signal.validation === 'invalid') groups[signal.group].invalid++;
+                else groups[signal.group].unknown++;
+            });
+            
+            let statsHTML = '<div class="stats-panel">';
+            for (const [groupName, stats] of Object.entries(groups)) {
+                const rate = stats.total > 0 ? Math.round((stats.valid / stats.total) * 100) : 0;
+                statsHTML += `
+                    <div class="stat-card">
+                        <h3>${groupName}</h3>
+                        <div class="stat-value">${stats.total} 个信号</div>
+                        <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                            有效：${stats.valid} | 无效：${stats.invalid} | 未验证：${stats.unknown}<br>
+                            通过率：${rate}%
+                        </div>
+                    </div>
+                `;
+            }
+            statsHTML += '</div>';
+            
+            groupStats.innerHTML = statsHTML;
+        }
+
+        function updateStatistics(startTime) {
+            const endTime = performance.now();
+            const parseTimeMs = (endTime - startTime).toFixed(2);
+            
+            document.getElementById('totalSignals').textContent = parsedSignals.length;
+            
+            const validCount = parsedSignals.filter(s => s.validation === 'valid').length;
+            const invalidCount = parsedSignals.filter(s => s.validation === 'invalid').length;
+            
+            document.getElementById('validSignals').textContent = validCount;
+            document.getElementById('invalidSignals').textContent = invalidCount;
+            const total = parsedSignals.length;
+            const rate = total > 0 ? Math.round((validCount / total) * 100) : 0;
+            document.getElementById('validationRate').textContent = `${rate}%`;
+            
+            document.getElementById('totalBytes').textContent = canBytes.length;
+            document.getElementById('originalLength').textContent = `${document.getElementById('canData').value.length} 字符`;
+            document.getElementById('defCount').textContent = signalDefinitions.length;
+        }
+
+        function exportResults() {
+            if (parsedSignals.length === 0) {
+                showError('没有可导出的数据，请先解析信号');
+                return;
+            }
+            
+            let csvContent = "Signal Name,Group,Start Position,Length,Hex Value,Decimal Value,Min Value,Max Value,Status\n";
+            
+            parsedSignals.forEach(signal => {
+                const status = signal.validation === 'valid' ? 'Valid' : 
+                             signal.validation === 'invalid' ? 'Invalid' : 'Not Verified';
+                const min = signal.min !== null ? signal.min : '';
+                const max = signal.max !== null ? signal.max : '';
+                
+                csvContent += `${signal.name},${signal.group},${signal.offset},${signal.length},${signal.hexValue},${signal.decimalValue},${min},${max},${status}\n`;
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `can_signals_${new Date().getTime()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('结果已导出为 CSV 文件');
+        }
+
+        function copyResults() {
+            if (parsedSignals.length === 0) {
+                showError('没有可复制的数据，请先解析信号');
+                return;
+            }
+            
+            let resultText = 'CAN 信号解析结果:\n\n';
+            
+            const groups = {};
+            parsedSignals.forEach(signal => {
+                if (!groups[signal.group]) {
+                    groups[signal.group] = [];
+                }
+                groups[signal.group].push(signal);
+            });
+            
+            for (const [groupName, signals] of Object.entries(groups)) {
+                resultText += `=== ${groupName} ===\n`;
+                signals.forEach(signal => {
+                    const status = signal.validation === 'valid' ? '[有效]' : 
+                                 signal.validation === 'invalid' ? '[无效]' : '[未验证]';
+                    resultText += `  ${signal.name}: ${signal.hexValue} (${signal.decimalValue}) ${status}\n`;
+                });
+                resultText += '\n';
+            }
+            
+            navigator.clipboard.writeText(resultText).then(() => {
+                showNotification('结果已复制到剪贴板');
+            }).catch(() => {
+                showError('复制失败');
+            });
+        }
+
+        function showNotification(message) {
+            const notice = document.getElementById('copyNotice');
+            notice.textContent = message;
+            notice.style.display = 'block';
+            notice.style.background = '#d4edda';
+            notice.style.color = '#155724';
+            
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const notice = document.getElementById('errorNotice');
+            notice.textContent = message;
+            notice.style.display = 'block';
+            notice.style.background = '#f8d7da';
+            notice.style.color = '#721c24';
+            
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3000);
+        }
+
+        window.onload = function() {
+            toggleView('signals');
+        };
+    </script>
+</body>
+</html>
