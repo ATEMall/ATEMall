@@ -1,90 +1,91 @@
-<p align="center">
-  <h1 align="center">ATEMall</h1>
-  <p align="center"><strong>Automatic Test Equipment Mall</strong></p>
-  <p align="center">专注于自动化测试与测试设备领域的专业项目协作与交易平台</p>
-  <p align="center"><i>A professional project collaboration and trading platform dedicated to automated testing and test equipment</i></p>
-</p>
+# ATEMall
 
-<p align="center">
-  <b>让自动化测试触手可及 — Making Automated Testing Accessible</b>
-</p>
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Org](https://img.shields.io/badge/Organization-ATEMall-blue.svg)](https://github.com/ATEMall)
+[![ATEMall](https://img.shields.io/badge/Platform-ATEMall-orange.svg)](https://github.com/ATEMall)
 
----
+**ATEMall** — 面向汽车测试工程师的开源工具与AI知识平台。我们致力于为 HIL / CAN / UDS / EMB 测试领域提供高效、易用的工具和知识服务。
 
-## 📖 平台简介 | About
+## 关于 ATEMall
 
-**[中文]** ATEMall（Automatic Test Equipment Mall）是专注于自动化测试与测试设备领域的专业项目协作与交易平台。我们致力于连接项目需求方与优质承接方，为双方提供安全、高效、透明的合作服务，让高品质、高性价比的自动化测试方案精准触达每一位需要的客户。
+ATEMall 专注于汽车电子测试领域，提供：
 
-**[English]** ATEMall (Automatic Test Equipment Mall) is a professional project collaboration and trading platform dedicated to the field of automated testing and test equipment. We connect project owners with qualified service providers, offering secure, efficient, and transparent cooperation services — delivering high-quality, cost-effective automated testing solutions to every client who needs them.
+- **开源测试工具** — 覆盖 CAN 总线测试、日志分析、帧解码等核心场景
+- **AI 知识库** — 基于大语言模型的汽车测试问答系统，即问即答
+- **测试模板与资源** — DBC 文件库、测试用例模板、诊断协议文档
+- **社区交流** — 测试工程师经验分享与技术讨论
 
-平台用户、方案提供商涉及：硬件在环系统，自动化功能测试台架，终检测试台架，老化测试台，ICT测试台，自动化软件测试，涉及汽车、汽车零部件、航空航天、芯片等各工业领域自动化测试方案。
-Platform user, solution providers include: hardware-in-the-loop systems, automated functional test benches, final inspection test benches, aging test benches, ICT test benches, and automated software testing, covering automated testing solutions for various industrial sectors such as automobiles, auto parts, aerospace, chips and so on.
+## 开源工具
 
----
+| 工具 | 描述 | 语言 | 链接 |
+|------|------|------|------|
+| **can-test-tool** | CAN 总线 UDS 诊断测试工具，支持自动化测试脚本 | Python | [GitHub](https://github.com/ATEMall/can-test-tool) |
+| **can-log-analyzer** | CAN 总线日志分析工具，支持 ASC/BLF/TRC 多格式 | Python | [GitHub](https://github.com/ATEMall/can-log-analyzer) |
+| **SmartProposal** | 智能项目提案生成器，所见即所得在线编辑 | HTML/JS/CSS | [GitHub](https://github.com/ATEMall/SmartProposal) |
+| **process-monitor** | 进程监控工具，保障自动化测试稳定运行 | Python | [GitHub](https://github.com/ATEMall/process-monitor) |
+| **CANFrameAnalyzer** | CAN 帧解码工具，ISO 15765-2 协议解码，浏览器即用 | HTML/JS | [GitHub](https://github.com/ATEMall/CANFrameAnalyzer) |
 
-## ✨ 平台优势 | Advantages
+## AI 知识库
 
-| 能力 | 说明 | Feature | Description |
-|:---:|------|:---:|------|
-| 🎯 **精准匹配** | 基于智能算法，为项目方推荐最合适的承接方，为承接方推荐最匹配的项目，显著提升合作效率 | 🎯 **Smart Matching** | Intelligent algorithm recommending optimal providers for projects and best-fit projects for providers |
-| 🛡️ **安全保障** | 实名认证、资质审核、合同托管、资金担保，全方位保护交易安全，降低合作风险 | 🛡️ **Security** | Identity verification, qualification review, escrow contracts, and fund guarantees for risk-free transactions |
-| 📊 **透明管理** | 项目进度实时跟踪，任务分配清晰可见，交付物在线审核，让项目管理透明化、规范化 | 📊 **Transparency** | Real-time progress tracking, clear task assignments, and online deliverable reviews |
-| ⚡ **高效协作** | 在线沟通、文件共享、任务管理、进度跟踪——一站式协作工具，全面提升团队效率 | ⚡ **Efficiency** | One-stop collaboration: messaging, file sharing, task management, and progress tracking |
-| 💰 **合理定价** | 市场化竞价机制，公开透明的报价体系，帮助项目方找到性价比最优的方案 | 💰 **Fair Pricing** | Market-driven competitive bidding with open, transparent quotation system |
-| 🏆 **质量保证** | 专业评价体系与严格的交付验收标准，确保项目质量，维护双方权益 | 🏆 **Quality** | Professional rating system and strict acceptance standards ensuring project excellence |
+[ATEMall AI知识库](https://atemall-ai.com) 是专为汽车测试工程师打造的AI问答平台：
 
----
+- **HIL 测试** — 测试环境搭建、测试用例设计、常见问题排查
+- **CAN 总线** — 报文分析、DBC 解析、网络管理
+- **UDS 诊断** — 诊断服务、DTC 管理、刷写流程
+- **EMB 测试** — 电子制动系统测试方案与用例
 
-## 🔧 平台服务 | Services
+> 注册即可免费使用 AI 问答，获取完整测试模板和 DBC 文件库。
 
-**[中文]**
+## 快速导航
 
-面向项目方：项目发布与管理 → 承接方筛选与评估 → 合同签署与管理 → 项目进度跟踪 → 交付物审核验收 → 资金托管与支付 → 项目评价与反馈
+### 新手入门
 
-面向承接方：项目需求浏览 → 在线投标申请 → 项目执行管理 → 团队协作工具 → 交付物提交 → 收款管理 → 个人/企业展示
+1. 浏览上方工具列表，选择适合你场景的工具
+2. 每个工具仓库都有详细的 Quick Start 指南
+3. 访问 [AI 知识库](https://atemall-ai.com) 获取测试知识问答
 
-**[English]**
+### 场景推荐
 
-**For Project Owners:** Post & Manage Projects → Screen & Evaluate Providers → Sign & Manage Contracts → Track Progress → Review & Accept Deliverables → Escrow & Pay → Rate & Feedback
+| 你的场景 | 推荐工具 |
+|---------|---------|
+| 需要发送 UDS 诊断请求测试 ECU | [can-test-tool](https://github.com/ATEMall/can-test-tool) |
+| 分析路测采集的 CAN 日志 | [can-log-analyzer](https://github.com/ATEMall/can-log-analyzer) |
+| 快速理解一帧 CAN 数据的含义 | [CANFrameAnalyzer](https://github.com/ATEMall/CANFrameAnalyzer) |
+| 监控自动化测试进程稳定性 | [process-monitor](https://github.com/ATEMall/process-monitor) |
+| 编写项目测试方案文档 | [SmartProposal](https://github.com/ATEMall/SmartProposal) |
 
-**For Service Providers:** Browse Requirements → Submit Proposals → Execute & Manage Projects → Team Collaboration Tools → Submit Deliverables → Receive Payments → Personal/Business Showcase
+## 贡献
 
----
+我们欢迎各种形式的贡献！
 
-## 📈 平台数据 | Stats
+- 提交 Bug 报告或功能建议 — 在对应仓库创建 Issue
+- 贡献代码 — Fork + Pull Request
+- 分享测试经验 — 在 AI 知识库中贡献问答
+- 完善文档 — 帮助改进 README 和使用指南
 
-| 指标 | 数据 | Metric | Data |
-|:---:|:---:|:---:|:---:|
-| 注册用户 Registered Users | **10,000+** | 发布项目 Published Projects | **5,000+** |
-| 成功交易 Successful Deals | **3,000+** | 用户满意度 User Satisfaction | **98%** |
+### 贡献指南
 
----
+1. Fork 目标仓库
+2. 创建功能分支 (`git checkout -b feature/your-feature`)
+3. 提交更改 (`git commit -m 'Add your feature'`)
+4. 推送到分支 (`git push origin feature/your-feature`)
+5. 发起 Pull Request
 
-## 💎 企业文化 | Culture
+## 许可证
 
-**使命 | Mission：让自动化测试触手可及 — Making Automated Testing Accessible**
+本组织下所有项目均基于 [MIT License](https://opensource.org/licenses/MIT) 开源，可自由使用和修改。
 
-| 价值观 | 内涵 | Value | Description |
-|:------:|------|:------:|------|
-| **专业** Professional | 深耕测试领域，提供行业级解决方案 | **Professionalism** | Deep expertise in testing, delivering industry-grade solutions |
-| **诚信** Integrity | 以信为本，构建可信赖的合作生态 | **Integrity** | Trust-first approach, building a reliable partnership ecosystem |
-| **创新** Innovation | 持续技术驱动，优化每一处用户体验 | **Innovation** | Continuous tech-driven improvement of every user experience |
-| **共赢** Win-Win | 促进多方协作，创造更大产业价值 | **Collaboration** | Fostering multi-party cooperation for greater industry value |
+## 联系我们
 
----
-
-## 📬 联系我们 | Contact Us
-
-| 📧 **客服邮箱 Service:** | [atemall_service@atemall.cn](mailto:atemall_service@atemall.cn) |
-|:---:|:---:|
-| 📧 **商务合作 Business:** | [zlj001@atemall.cn](mailto:zlj001@atemall.cn) |
-
-> 加入 ATEMall，开启高效项目协作之旅！
->
-> Join ATEMall and start your journey of efficient project collaboration!
+- **GitHub Organization**: [https://github.com/ATEMall](https://github.com/ATEMall)
+- **AI 知识库**: [https://atemall-ai.com](https://atemall-ai.com)
+- **问题反馈**: 在对应仓库创建 Issue，或发送邮件至 atemall@example.com
 
 ---
 
-<p align="center">
-  <sub>© 2025-2026 ATEMall. All rights reserved.</sub>
-</p>
+## 🔗 更多资源
+
+- 🤖 [ATEMall AI知识库](https://atemall-ai.com) — 汽车测试工程师的AI助手
+- 💬 免费使用AI问答，覆盖 HIL / CAN / UDS / EMB 测试领域
+- 📋 注册即可获取完整测试模板和DBC文件库
+- ⭐ 如果我们的工具对你有帮助，欢迎 Star 支持我们！
