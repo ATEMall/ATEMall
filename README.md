@@ -19,11 +19,12 @@ ATEMall 专注于汽车电子测试领域，提供：
 
 | 工具 | 描述 | 语言 | 链接 |
 |------|------|------|------|
-| **can-test-tool** | CAN 总线 UDS 诊断测试工具，支持自动化测试脚本 | Python | [GitHub](https://github.com/ATEMall/can-test-tool) |
-| **can-log-analyzer** | CAN 总线日志分析工具，支持 ASC/BLF/TRC 多格式 | Python | [GitHub](https://github.com/ATEMall/can-log-analyzer) |
-| **SmartProposal** | 智能项目提案生成器，所见即所得在线编辑 | HTML/JS/CSS | [GitHub](https://github.com/ATEMall/SmartProposal) |
-| **process-monitor** | 进程监控工具，保障自动化测试稳定运行 | Python | [GitHub](https://github.com/ATEMall/process-monitor) |
-| **CANFrameAnalyzer** | CAN 帧解码工具，ISO 15765-2 协议解码，浏览器即用 | HTML/JS | [GitHub](https://github.com/ATEMall/CANFrameAnalyzer) |
+| **can-test-tool** | CAN/CAN-FD 自动化测试框架，PeakCAN接口 + UDS诊断 | Python | [GitHub](https://github.com/ATEMall/can-test-tool) |
+| **can-log-analyzer** | CAN 日志分析桌面工具，ASC/BLF + DBC信号解码 | Electron/React | [GitHub](https://github.com/ATEMall/can-log-analyzer) |
+| **uds-diagnostic-toolkit** | UDS诊断自动化测试框架，15种服务 + 测试报告生成 | Python | [GitHub](https://github.com/ATEMall/uds-diagnostic-toolkit) |
+| **SmartProposal** | 在线SVG图表编辑器，NL生成8类图表 | HTML/JS/CSS | [GitHub](https://github.com/ATEMall/SmartProposal) |
+| **process-monitor** | Windows进程监控告警，邮件通知+崩溃分析 | Python | [GitHub](https://github.com/ATEMall/process-monitor) |
+| **CANFrameAnalyzer** | CAN帧解码工具，ISO-TP协议解码，浏览器即用 | HTML/JS | [GitHub](https://github.com/ATEMall/CANFrameAnalyzer) |
 
 ## AI 知识库
 
@@ -48,6 +49,7 @@ ATEMall 专注于汽车电子测试领域，提供：
 
 | 你的场景 | 推荐工具 |
 |---------|---------|
+| 需要做UDS诊断自动化测试 | [uds-diagnostic-toolkit](https://github.com/ATEMall/uds-diagnostic-toolkit) |
 | 需要发送 UDS 诊断请求测试 ECU | [can-test-tool](https://github.com/ATEMall/can-test-tool) |
 | 分析路测采集的 CAN 日志 | [can-log-analyzer](https://github.com/ATEMall/can-log-analyzer) |
 | 快速理解一帧 CAN 数据的含义 | [CANFrameAnalyzer](https://github.com/ATEMall/CANFrameAnalyzer) |
